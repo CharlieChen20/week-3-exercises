@@ -1,21 +1,43 @@
 #include "automaton.h"
+#include <string>
 
-Automaton::Automaton(map<char, int> A, vector<vector<int>> M, vector<int> S) : alphabet(A), transition_matrix(M), accepting_states(S) {}
+using std::vector;
+using std::map;
+using std::string;
 
-bool Automaton::Read(string word)
+std::string strip(const map<char, unsigned int> &A, std::string s)
 {
-    for (auto &c : word)
+    auto new_end = std::remove_if(s.begin(),s.end(), [&A](char a){return A.find(a) == A.end();});
+    //! remove_if不直接删除元素，而是把需要删除的元素移动到末尾。
+    s.erase(new_end, s.end()); //! 两个参数代表开始删除的位置和删除到此位置（不包括）
+    return s;
+}
+
+int main()
+{
+    vector<vector<unsigned int>> M{{0,1},{0,1}};
+    vector<char> A{'a', 'b'};
+    vector<unsigned int> S{1}; //这里表示，接受状态为1
+    Automaton ends_with_one(A, M, S);
+
+    std::cout <<"Enter a string of characters from the alphabet {a,b}:" << std::endl;
+    std::string s;
+    std::cin >> s; //! 表示键盘的输入赋值给s
+    try
     {
-        // a map's find method returns an iterator to the key-value pair for the given key
-        // iterators have syntax similar to pointers: 
-        // (*it) gives the key-value pair
-        // -> can be used to access methods of the key value pair
-        auto it = alphabet.find(c);
+        /* code */
+        std::cout << "Accepted?" << ends_with_one.Read(s) << std::endl; //! recall, Automaton类的read方法会返回一个bool表示接受与否。
 
-        //it->first gives the key, it->second gives the value
-        int j = it->second;
-        state = transition_matrix[state][j];
     }
+    catch(const std::exception& e)
+    {
+        std::cout << e.what() << std::endl; // what是返回异常的说明。
+    }
+    catch(...)
+    {
+        std::cout << "Unanticipated exception!" << std::endl;
+    }
+    
+    return 0;
 
-    return std::find(accepting_states.begin(), accepting_states.end(), state) != accepting_states.end();
 }

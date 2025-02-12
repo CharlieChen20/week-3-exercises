@@ -11,5 +11,6 @@ set(CMAKE_CXX_FLAGS "-g")  # can add / remove flags here
 add_subdirectory(source)
 # other subdirectories here if necessary
 
+set(Catch2_DIR "~/vcpkg/installed/x64-linux/share/catch2")
 find_package(Catch2 3 REQUIRED) # add 'PATHS /path/to/local/install' if required.  
 add_subdirectory(test)
